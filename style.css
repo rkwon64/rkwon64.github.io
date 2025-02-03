@@ -1,0 +1,21 @@
+body{
+    background: black;
+}
+#canvas1{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px;
+    height: 600px;
+    background-color: white;
+   background-image: url('Background.gif');
+   
+    .bebas-neue-regular {
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+        }
+      };
+      
+      
