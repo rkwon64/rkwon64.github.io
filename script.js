@@ -658,29 +658,29 @@ class Enemy {
 
         // Default properties (Sword Skeleton)
         this.health = 100;
-        this.damage = 0.1;
+        this.damage = 0.2;
         this.maxHealth = this.health;
  
         // Unique enemy properties
         if (enemyIndex === 1) {  
             // Spear Skeleton
             this.health = 150;  
-            this.damage = 0.2;
+            this.damage = 0.3;
         } else if (enemyIndex === 2) {  
             // Crow 
             this.health = 400;  
-            this.damage = 0.5; 
+            this.damage = 0.6; 
             this.speed = Math.random() * 0.1 + 0.3; 
             this.movement = this.speed;
             this.size = 'large';
         } else if (enemyIndex === 3) {  
             // Ring Girl
             this.health = 50; 
-            this.damage = 2;  
+            this.damage = 2.5;  
             this.speed = Math.random() * .7 + .8; 
             this.movement = this.speed;
         } else if (enemyIndex === 4) {  // Boss
-            this.health = 1500;
+            this.health = 2000;
             this.damage = .7;
             this.maxHealth = this.health;
             this.isCasting = false;
@@ -800,18 +800,16 @@ class Enemy {
     }
     
 
-    // Method to spawn Sword Skeletons when casting
     spawnSwordSkeletons() {
-        // Spawn multiple Sword Skeletons around the boss
-        for (let i = 0; i < 20; i++) {
+        // Spawn multiple Sword Skeletons 
+        for (let i = 0; i < 25; i++) {
             let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
-            let newSkeleton = new Enemy(verticalPosition, 0);  // Spawn a Sword Skeleton
+            let newSkeleton = new Enemy(verticalPosition, 0); 
             enemies.push(newSkeleton);
             enemyPositions.push(verticalPosition);
         }
     }
 }
-// Initialize the bossSpawned flag at the start
 let bossSpawned = false;
 
 function handleEnemies() {
@@ -837,16 +835,16 @@ function handleEnemies() {
         }
     }
 
-    // Check if boss should spawn at 200 points before the winning score
-    if (currentLevel === 6 && !bossSpawned && score >= (winningScore - 990)) {
+    // Check if boss should spawn at 10 points before the winning score
+    if (currentLevel === 6 && !bossSpawned && score >= (winningScore - 10)) {
         let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
-        enemies.push(new Enemy(verticalPosition, 4));  // Spawn the boss as a regular enemy (index 4)
+        enemies.push(new Enemy(verticalPosition, 4)); 
         bossSpawnSound.currentTime = 0;  
         bossSpawnSound.play();
         bossSpawned = true;
     }
 
-    // Calculate the spawn factor based on how far the player is through the level
+    // Calculate the spawn  based on how far the player is through the level
     let levelProgress = score / winningScore;  // Range: 0 to 1
     let earlySpawnFactor = Math.max(1 - levelProgress, 0.2);  // Slower spawn at the start, faster as you near winning score
 
@@ -897,9 +895,9 @@ function handleEnemies() {
                 } else if (randomValue < 0.8 - earlySpawnFactor * 0.2) {
                     enemyIndex = 1; // Spear Skeleton
                 } else if (randomValue < 0.95 - earlySpawnFactor * 0.1) {
-                    enemyIndex = (levelProgress >= 0.5) ? 2 : 0; // Crow starts after 50% progress
+                    enemyIndex = (levelProgress >= 0.4) ? 2 : 0; // Crow starts after 40% progress
                 } else {
-                    enemyIndex = (levelProgress >= 0.85) ? 3 : 0; // Ring Girl starts after 75% progress
+                    enemyIndex = (levelProgress >= 0.6) ? 3 : 0; // Ring Girl starts after 65% progress
                 }
             }
             
@@ -921,8 +919,6 @@ function handleEnemies() {
         }
     }
 }
-
-
 
 //resources
 const Tea = new Image();
