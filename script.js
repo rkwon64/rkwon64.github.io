@@ -29,7 +29,7 @@ const audioFiles = {
    shoot: new Audio('Shoot.mp3'),
    swordAttack: new Audio('Swordattack.mp3'),
    skeletonDeath: new Audio('Skeletondeath.mp3'),
-   teaPickup: new Audio('Tea.mp3'),
+   teaPickup: new Audio('tea.mp3'),
    placeTower: new Audio('place.mp3'),
    slash: new Audio('slash.mp3')
 
