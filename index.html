@@ -5,45 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tea Defenders</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <canvas id="canvas1"></canvas>
     <script src="script.js"></script>
     <button id="mute-button">Mute</button>
-<audio id="background-music" loop>
-  <source src="music.mp3" type="audio/mp3">
-  <style>
-    #mute-button {
-      background-color: #b9b4b4;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-      border-radius: 10px;
-    }
 
-    #mute-button:hover {
-      background-color: #ccc;
-    }
-  </style>
-  <script>
-    let backgroundMusic = document.getElementById('background-music');
-    let muteButton = document.getElementById('mute-button');
+    <audio id="background-music" loop>
+      <source src="music.mp3" type="audio/mp3">
+    </audio>
 
-    backgroundMusic.play();
-
-    muteButton.addEventListener('click', function() {
-      if (backgroundMusic.muted) {
-        backgroundMusic.muted = false; 
-        muteButton.textContent = "Mute"; 
-      } else {
-        backgroundMusic.muted = true; 
-        muteButton.textContent = "Unmute"; 
+    <style>
+      #mute-button {
+        background-color: #b9b4b4;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 10px;
       }
-    });
-  </script>
+
+      #mute-button:hover {
+        background-color: #ccc;
+      }
+    </style>
+
+    <script>
+      let backgroundMusic = document.getElementById('background-music');
+      let muteButton = document.getElementById('mute-button');
+
+      // Start playing audio on the first click anywhere on the page
+      document.body.addEventListener('click', function() {
+        if (backgroundMusic.paused) {
+          backgroundMusic.play().catch(error => {
+            console.error('Audio play error:', error);
+          });
+        }
+      });
+
+      // Toggle mute/unmute on button click
+      muteButton.addEventListener('click', function() {
+        if (backgroundMusic.muted) {
+          backgroundMusic.muted = false;
+          muteButton.textContent = "Mute";
+        } else {
+          backgroundMusic.muted = true;
+          muteButton.textContent = "Unmute";
+        }
+      });
+    </script>
     
 </body>
 </html>
