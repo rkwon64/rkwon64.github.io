@@ -60,17 +60,17 @@ function showLevelText() {
    let message = "";
 
    if (currentLevel === 1) {
-       message = "In this land, Tea was used as a currency and as a sacred offering to spirits\nIt is said that the tea leaves grown there hold mystical properties, keeping balance between living and dead.\nOne fateful night, the vengeful Lord broke the seal between the surface and the underground,\n causing swarms of the dead to rise from their graves\n Captivated by the power of the village's tea, The Lord led the undead army to attack the village\n to steal the tea Leaves and return themselves to the mortal world\n Will you protect the village or will it be lost to the tide of undead? \n\nLevel 1: Click the moon to start!";
+       message = "In this land, Tea was used as a currency and as a sacred offering to spirits\nIt is said that the tea leaves grown there hold mystical properties, keeping balance between living and dead.\nOne fateful night, the vengeful Lord broke the seal between the surface and the underground,\n causing swarms of the dead to rise from their graves\n Captivated by the power of the village's tea, The Lord led the undead army to attack the village\n to steal the tea Leaves and restore themselves to life\n Will you protect the village or will it be lost to the tide of undead? \n\nLevel 1: Click the moon to start!";
    } else if (currentLevel === 2) {
        message = "Good job! Here's a new troop to use! They don't attack and have weak health, but they produce tea!\nKunoichi unlocked!\nLevel 2: Click the moon to continue.";
    } else if (currentLevel === 3) {
-       message = "The Lord is not happy, Another even stronger wave inbound! Reinforcements have arrived!\n Samurai are strong and alot of health, but cost 150 tea. \nSamurai Unlocked!\nLevel 3: Click the moon to start!";
+       message = "The Lord is not happy, Another even stronger wave inbound! Reinforcements have arrived!\n Samurai are strong and alot of health, but are close range and cost 150 tea. \nSamurai Unlocked!\nLevel 3: Click the moon to start!";
    } else if (currentLevel === 4) {
        message = "The Undead Armies Grow Much Stronger! \nThe Shogun has arrived to help quell the Undead!\nHis powerful Slash attack cleaves through his foes!  \nShogun Unlocked!\nLevel 4: Click the moon to start!";
    } else if (currentLevel === 5) {
        message = "The Lord is Growing Furious, Beware his new Troop the Yokai! \nSmall and fragile, but Very Swift and Deadly!\n Level 5: Click the moon to start!";""
    }  else if (currentLevel === 6) {
-    message = "The Lord has Had Enough! He decided to get things done himself!\n Level 6: Click the moon to start!";""
+    message = "The Lord has Had Enough! He decided to get things done himself!\n Beware his summon necromantic ability to raise the dead!\n Level 6: Click the moon to start!";""
     } else if (currentLevel === 7) {
         message = "Thanks for Playing! Continue for endless levels!\n Endless Levels: Click the moon to start!";""
     }
@@ -335,7 +335,7 @@ class Tower {
        } else if (this.chosenTower === 3) {
            this.health = 50; // Kunoichi health
        } else if (this.chosenTower === 4) {
-           this.health = 800; // Shogun health
+           this.health = 600; // Shogun health
        }
 
    }
@@ -426,7 +426,7 @@ class Tower {
            let enemy = enemies[j];
            if (enemy && collision(this, enemy)){
                //Shogun dps
-               enemy.health -= 0.3;
+               enemy.health -= 0.2;
                this.shooting = true;
            } else {
                this.shooting = false;
