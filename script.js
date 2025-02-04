@@ -13,7 +13,7 @@ const enemyPositions = [];
 const projectiles = [];
 const resources = [];
 //score to win
-const winningScore = 1500;
+const winningScore = 1000;
 //starting resources
 let numberOfResources = 300;
 //enemy wave spawn interval
@@ -45,13 +45,13 @@ function playSound(audioKey) {
 }
 //levels
 //starting level
-let currentLevel = 1;
+let currentLevel = 6;
 let gamePaused = true;
 let levelTextDisplayed = true;
 
 function showLevelText() {
    ctx.fillStyle = 'rgba(0,0,0, 0.8)';
-   ctx.fillRect(100, 240, 700, 200);
+   ctx.fillRect(50, 200, 800, 370);
 
    ctx.fillStyle = 'white';
    ctx.font = '20px Bebas Neue';
@@ -60,27 +60,44 @@ function showLevelText() {
    let message = "";
 
    if (currentLevel === 1) {
-       message = "Greetings, welcome to The Ancient Tea Village! We are under attck and need your help to\n protect our Tea. Use troops to defend against the evil forces!\n you start with archers, they cost 100 tea and are a solid ranged unit with mediocore health\nLevel 1: Click the moon to start!";
+       message = "In this land, Tea was used as a currency and as a sacred offering to spirits\nIt is said that the tea leaves grown there hold mystical properties, keeping balance between living and dead.\nOne fateful night, the vengeful Lord broke the seal between the surface and the underground,\n causing swarms of the dead to rise from their graves\n Captivated by the power of the village's tea, The Lord led the undead army to attack the village\n to steal the tea Leaves and return themselves to the mortal world\n Will you protect the village or will it be lost to the tide of undead? \n\nLevel 1: Click the moon to start!";
    } else if (currentLevel === 2) {
        message = "Good job! Here's a new troop to use! They don't attack and have weak health, but they produce tea!\nKunoichi unlocked!\nLevel 2: Click the moon to continue.";
    } else if (currentLevel === 3) {
-       message = "Another even stronger wave inbound! Reinforcements have arrived!\n Samurai are strong and alot of health, but cost 150 tea. \nSamurai Unlocked!\nLevel 3: Click the moon to start!";
+       message = "The Lord is not happy, Another even stronger wave inbound! Reinforcements have arrived!\n Samurai are strong and alot of health, but cost 150 tea. \nSamurai Unlocked!\nLevel 3: Click the moon to start!";
    } else if (currentLevel === 4) {
-       message = "Final Wave! The Shogun has Arrived. \nHis powerful Slash attack cleaves through foes!  \nShogun Unlocked!\nLevel 4: Click the moon to start!";
+       message = "The Undead Armies Grow Much Stronger! \nThe Shogun has arrived to help quell the Undead!\nHis powerful Slash attack cleaves through his foes!  \nShogun Unlocked!\nLevel 4: Click the moon to start!";
    } else if (currentLevel === 5) {
-       message = "The Tea is Protected, You Win! Thank You for Playing\n Keep playing for endless levels";
-   }
+       message = "The Lord is Growing Furious, Beware his new Troop the Yokai! \nSmall and fragile, but Very Swift and Deadly!\n Level 5: Click the moon to start!";""
+   }  else if (currentLevel === 6) {
+    message = "The Lord has Had Enough! He decided to get things done himself!\n Level 6: Click the moon to start!";""
+    } else if (currentLevel === 7) {
+        message = "Thanks for Playing! Continue for endless levels!\n Endless Levels: Click the moon to start!";""
+    }
    let lines = message.split("\n");
 
-   let x = canvas.width / 2;
-   let y = canvas.height / 2;
-   let lineHeight = 30; // Adjust spacing between lines
-   
-   lines.forEach((line, index) => {
-       ctx.fillText(line, x, y + index * lineHeight);
-   });
-}
+let x = canvas.width / 2;
+let y = canvas.height / 2;
+let lineHeight = 30; // Adjust spacing between lines
 
+lines.forEach((line, index) => {
+    
+    if (line.includes("Level 1: Click the moon to start!")) {
+        ctx.fillStyle = 'yellow';  
+     } else if (line.includes("Kunoichi unlocked!")) {
+        ctx.fillStyle = 'yellow';  
+    } else if (line.includes("Samurai Unlocked!")) {
+        ctx.fillStyle = 'orange';  
+    } else if (line.includes("Shogun Unlocked!")) {
+        ctx.fillStyle = 'red'; 
+    } else {
+        ctx.fillStyle = 'white';  
+    }
+
+    ctx.fillText(line, x, y + index * lineHeight);
+});
+
+}
 //game start
 canvas.addEventListener("click", function() {
    if (gamePaused) {
@@ -223,7 +240,7 @@ class ShogunProjectile {
         this.width = 40;
         this.height = 40;
         //projectile power and speed
-        this.power = 1;
+        this.power = 1.5;
         this.speed = 3;
         //arrow sound effect
         playSound('slash')
@@ -318,7 +335,7 @@ class Tower {
        } else if (this.chosenTower === 3) {
            this.health = 50; // Kunoichi health
        } else if (this.chosenTower === 4) {
-           this.health = 500; // Shogun health
+           this.health = 800; // Shogun health
        }
 
    }
@@ -409,7 +426,7 @@ class Tower {
            let enemy = enemies[j];
            if (enemy && collision(this, enemy)){
                //Shogun dps
-               enemy.health -= 0.1;
+               enemy.health -= 0.3;
                this.shooting = true;
            } else {
                this.shooting = false;
@@ -579,7 +596,7 @@ class floatingMessage {
        this.y = y;
        this.size = size;
        this.lifeSpan = 0;
-       this.color = color;     
+       this.color = color;
        this.opacity = 1;
    }
    update(){
@@ -614,73 +631,200 @@ enemyTypes.push(enemy1);
 const enemy2 = new Image();
 enemy2.src = 'SpearSkeletonWalk.png';
 enemyTypes.push(enemy2);
+const enemy3 = new Image();
+enemy3.src = 'crow.png';
+enemyTypes.push(enemy3); 
+const enemy4 = new Image();
+enemy4.src = 'ring.png';
+enemyTypes.push(enemy4);  
+const bossImage = new Image();
+bossImage.src = 'boss.png';
+enemyTypes.push(bossImage);
 
+const bossCastSound = new Audio('cast.mp3');
+const bossSpawnSound = new Audio('enter.mp3');
 
 class Enemy {
-   constructor(verticalPosition){
-       this.x = canvas.width;
-       this.y = verticalPosition;
-       this.width = cellSize - cellGap * 2;
-       this.height = cellSize - cellGap * 2;
-       //default speed variable
-       this.speed = Math.random() * 0.2 + 0.4;
-       this.movement = this.speed;
+    constructor(verticalPosition, enemyIndex) {
+        this.x = canvas.width;
+        this.y = verticalPosition;
+        this.width = cellSize - cellGap * 2;
+        this.height = cellSize - cellGap * 2;
+        this.speed = Math.random() * 0.2 + 0.4; // Default speed
+        this.movement = this.speed;
+ 
+        // Assign enemy type (could be the boss image as well)
+        this.enemyType = enemyTypes[enemyIndex];
 
-         //spawn random enemy type
-         this.enemyType = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+        // Default properties (Sword Skeleton)
+        this.health = 100;
+        this.damage = 0.1;
+        this.maxHealth = this.health;
+ 
+        // Unique enemy properties
+        if (enemyIndex === 1) {  
+            // Spear Skeleton
+            this.health = 150;  
+            this.damage = 0.2;
+        } else if (enemyIndex === 2) {  
+            // Crow 
+            this.health = 400;  
+            this.damage = 0.5; 
+            this.speed = Math.random() * 0.1 + 0.3; 
+            this.movement = this.speed;
+            this.size = 'large';
+        } else if (enemyIndex === 3) {  
+            // Ring Girl
+            this.health = 50; 
+            this.damage = 2;  
+            this.speed = Math.random() * .7 + .8; 
+            this.movement = this.speed;
+        } else if (enemyIndex === 4) {  // Boss
+            this.health = 1500;
+            this.damage = .7;
+            this.maxHealth = this.health;
+            this.isCasting = false;
+            this.castTimer = 0;
+            this.castDuration = 470;
+            this.castCooldown = 300; // Cooldown before next cast
+            this.lastCastTime = 0; // Tracks when last cast happened
+            this.speed = 0.2; // Slow boss movement
+        
+            // Casting animation frames
+            this.minCastFrame = 7; // Example frame start for casting
+            this.maxCastFrame = 38; // Example frame end for casting
 
-       //default health
-       this.health = 100;
-       //default damage
-       this.damage = 0.2;
-       this.maxHealth = this.health;
+            this.lastHealth = this.health;
+        }
+ 
+        this.maxHealth = this.health;
+ 
+        // Sprite properties
+        this.frameX = 0;
+        this.frameY = 0;
+        this.minFrame = 0;
+        this.maxFrame = 6;
+        this.spriteWidth = 128;
+        this.spriteHeight = 128;
+    }
+ 
+     update() {
+        if (this.enemyType === bossImage) {
+            // Check if the boss has lost 250 health
+            if (this.health <= this.lastHealth - 250) {
+                // Move the boss to a random vertical lane
+                this.moveToRandomLane();
+                this.lastHealth = this.health; // Update the last health value after the move
+            }
 
-       //spear skeleton stats
-       if (this.enemyType === enemy2) {
-           this.health = 150;  
-           this.damage = 0.4;  
-           this.maxHealth = this.health;
-       }
-       this.frameX = 0;
-       this.frameY = 0;
-       this.minFrame = 0;
-       this.maxFrame = 6;
-       this.spriteWidth = 128;
-       this.spriteHeight = 128;
+            if (this.isCasting) {
+                this.movement = 0; // Stop moving while casting
+                this.castTimer++;
+        
+                // Play casting animation
+                if (frame % 15 === 0) { 
+                    if (this.frameX < this.maxCastFrame) {
+                        this.frameX++;
+                    } else {
+                        this.frameX = this.minCastFrame; // Loop within casting frames
+                    }
+                }
+        
+                if (this.castTimer >= this.castDuration) {
+                    this.spawnSwordSkeletons();
+                    this.isCasting = false;
+                    this.castTimer = 0;
+                    this.lastCastTime = frame; // Set cooldown timer
+                    this.movement = this.speed; // Resume movement
+                }
+            } else {
+                this.movement = this.speed;
+                this.x -= this.movement;
+        
+                // Regular walking animation
+                if (frame % 15 === 0) { 
+                    if (this.frameX < this.maxFrame) {
+                        this.frameX++;
+                    } else {
+                        this.frameX = this.minFrame;
+                    }
+                }
+        
+                // Boss casts at intervals (only if cooldown is over)
+                if (Math.random() < 0.01 && (frame - this.lastCastTime > this.castCooldown)) {
+                    this.isCasting = true;
+                    this.frameX = this.minCastFrame; // Start casting animation
+        
+                    // **Play the casting sound when casting begins**
+                    bossCastSound.currentTime = 0;  
+                    bossCastSound.play();
+                }
+            }
+        } else {
+            // Regular enemy behavior
+            this.x -= this.movement;
+    
+            // Ensure other enemies animate correctly
+            if (frame % 15 === 0) {
+                if (this.frameX < this.maxFrame) {
+                    this.frameX++;
+                } else {
+                    this.frameX = this.minFrame;
+                }
+            }
+        }
+    }
+    moveToRandomLane() {
+        // Define vertical lanes
+        const lanePositions = [cellSize, 2 * cellSize, 3 * cellSize, 4 * cellSize, 5 * cellSize];
+        // Pick a random lane
+        this.y = lanePositions[Math.floor(Math.random() * lanePositions.length)];
+    }
 
-   }
-   update(){
-       this.x -= this.movement;
-       if(frame % 15 === 0){
-           if(this.frameX < this.maxFrame) this.frameX++;
-           else this.frameX = this.minFrame;
-       }
-   }
-   draw(){
-       //ctx.fillStyle = 'red';
-      // ctx.fillRect(this.x, this.y, this.width, this.height)
-       ctx.fillStyle = 'white';
-       ctx.font = '30px Bebas Neue';
-       ctx.fillText(Math.floor(this.health), this.x + 15, this.y +30);
+    draw() {
+        ctx.fillStyle = 'white';
+        ctx.font = '30px Bebas Neue';
+        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30);
+    
+        // Draw the enemy sprite
+        ctx.drawImage(this.enemyType, this.frameX * this.spriteWidth, 0, this.spriteWidth, 
+            this.spriteHeight, this.x, this.y, this.width, this.height);
+    
+        if (this.enemyType === bossImage && this.isCasting) {
+            // Casting effect (red glow)
+         //   ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+           // ctx.beginPath();
+          //  ctx.arc(this.x + this.width / 2, this.y + this.height / 2, 50, 0, Math.PI * 2);
+           // ctx.fill();
+        }
+    }
+    
 
-      //ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
-      ctx.drawImage(this.enemyType, this.frameX * this.spriteWidth, 0, this.spriteWidth, 
-       this.spriteHeight, this.x, this.y, this.width, this.height);
-   }
+    // Method to spawn Sword Skeletons when casting
+    spawnSwordSkeletons() {
+        // Spawn multiple Sword Skeletons around the boss
+        for (let i = 0; i < 20; i++) {
+            let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
+            let newSkeleton = new Enemy(verticalPosition, 0);  // Spawn a Sword Skeleton
+            enemies.push(newSkeleton);
+            enemyPositions.push(verticalPosition);
+        }
+    }
 }
-function handleEnemies(){
+// Initialize the bossSpawned flag at the start
+let bossSpawned = false;
 
-   for (let i = 0; i < enemies.length; i++){
-       enemies[i].update();
-       enemies[i].draw();
-       //if enemies reach the end, trigger gameover screen
-       if (enemies[i].x < 0){
-           gameOver = true;
-       }
-       if (enemies[i].health <= 0){
-           //amout of tea dropped from enemies
-           playSound('skeletonDeath');
-            let gainedResources = enemies[i].maxHealth/5;
+function handleEnemies() {
+    for (let i = 0; i < enemies.length; i++) {
+        enemies[i].update();
+        enemies[i].draw();
+
+        if (enemies[i].x < 0) {
+            gameOver = true;
+        }
+        if (enemies[i].health <= 0) {
+            playSound('skeletonDeath');
+            let gainedResources = enemies[i].maxHealth / 5;
             floatingMessages.push(new floatingMessage('+' + gainedResources, enemies[i].x, enemies[i].y, 30, 'white'));
             floatingMessages.push(new floatingMessage('+' + gainedResources, 500, 70, 20, 'gold'));
             numberOfResources += gainedResources;
@@ -690,25 +834,95 @@ function handleEnemies(){
             enemyPositions.splice(findThisIndex, 1);
             enemies.splice(i, 1);
             i--;
-       }
-   }
-       //spawns enemies logic (Spawns as long as score is under winning score)
-   if (frame % enemiesInterval === 0 && score < winningScore){
-    //spawn enemy on random lane
-       let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
-       //enemy level spawnrates
-       let enemyType;
-       if (currentLevel >= 3) {
-           enemyType = Math.random() > 0.5 ? enemy2 : enemy1;  
-       } else {
-           enemyType = enemy1;  
-       }
-       enemies.push(new Enemy(verticalPosition))
-       enemyPositions.push(verticalPosition);
-       //staggers waves of enemies to allow more or less time for player to build up
-       if (enemiesInterval > 120) enemiesInterval -= 50;
-   }
+        }
+    }
+
+    // Check if boss should spawn at 200 points before the winning score
+    if (currentLevel === 6 && !bossSpawned && score >= (winningScore - 990)) {
+        let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
+        enemies.push(new Enemy(verticalPosition, 4));  // Spawn the boss as a regular enemy (index 4)
+        bossSpawnSound.currentTime = 0;  
+        bossSpawnSound.play();
+        bossSpawned = true;
+    }
+
+    // Calculate the spawn factor based on how far the player is through the level
+    let levelProgress = score / winningScore;  // Range: 0 to 1
+    let earlySpawnFactor = Math.max(1 - levelProgress, 0.2);  // Slower spawn at the start, faster as you near winning score
+
+    // Spawning new enemies logic
+    if (frame % enemiesInterval === 0 && score < winningScore) {
+        let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
+
+        // Number of enemies to spawn: Increasing based on level progress
+        let numberOfEnemiesToSpawn = Math.floor(Math.random() * 2) + 1 + Math.floor(levelProgress * 3); // Gradually more enemies
+
+        // Logic for spawning enemies based on the current level and progress within the level
+        for (let i = 0; i < numberOfEnemiesToSpawn; i++) {
+            let randomValue = Math.random();
+            let enemyIndex;
+
+            // Adjust spawn behavior based on current level and progress within the level
+            if (currentLevel >= 1 && currentLevel <= 2) {
+                // Level 1 and 2: Only Sword Skeletons
+                enemyIndex = 0; // Sword Skeleton
+            } else if (currentLevel === 3) {
+                if (randomValue < 0.8 - earlySpawnFactor * 0.3) {
+                    enemyIndex = 0; // Sword Skeleton
+                } else {
+                    enemyIndex = 1; // Spear Skeleton
+                }
+            } else if (currentLevel === 4) {
+                if (randomValue < 0.55 - earlySpawnFactor * 0.2) {
+                    enemyIndex = 0; // Sword Skeleton
+                } else if (randomValue < 0.75 - earlySpawnFactor * 0.15) {
+                    enemyIndex = 1; // Spear Skeleton
+                } else {
+                    enemyIndex = (levelProgress >= 1 / 3) ? 2 : 0; // Crow starts at 1/3 into the level
+                }
+            } else if (currentLevel >= 6) {
+                if (randomValue < 0.4 - earlySpawnFactor * 0.2) {
+                    enemyIndex = 0; // Sword Skeleton
+                } else if (randomValue < 0.6 - earlySpawnFactor * 0.15) {
+                    enemyIndex = 1; // Spear Skeleton
+                } else if (randomValue < 0.85 - earlySpawnFactor * 0.1) {
+                    enemyIndex = (levelProgress >= 1 / 3) ? 2 : 0; // Crow starts at 1/3 into the level
+                } else {
+                    enemyIndex = (levelProgress >= 2 / 3) ? 3 : 0; // Ring Girl starts at 2/3 into the level
+                }
+
+            }else if (currentLevel === 5) {
+                if (randomValue < 0.6 - earlySpawnFactor * 0.25) {
+                    enemyIndex = 0; // Sword Skeleton
+                } else if (randomValue < 0.8 - earlySpawnFactor * 0.2) {
+                    enemyIndex = 1; // Spear Skeleton
+                } else if (randomValue < 0.95 - earlySpawnFactor * 0.1) {
+                    enemyIndex = (levelProgress >= 0.5) ? 2 : 0; // Crow starts after 50% progress
+                } else {
+                    enemyIndex = (levelProgress >= 0.85) ? 3 : 0; // Ring Girl starts after 75% progress
+                }
+            }
+            
+            // Spawn the chosen enemy
+            let newEnemy = new Enemy(verticalPosition, enemyIndex);
+            enemies.push(newEnemy);
+            enemyPositions.push(verticalPosition);
+        }
+
+        // Adjust spawn interval to increase difficulty more gradually
+        if (currentLevel <= 2) {
+            enemiesInterval = Math.max(180, enemiesInterval - 5); // Slow spawn rate for early levels
+        } else if (currentLevel <= 4) {
+            enemiesInterval = Math.max(160, enemiesInterval - 8); // Slightly faster for mid game
+        } else if (currentLevel <= 6) {
+            enemiesInterval = Math.max(140, enemiesInterval - 10); // Slightly faster for later game
+        } else {
+            enemiesInterval = Math.max(120, enemiesInterval - 12); // Even faster as the game progresses
+        }
+    }
 }
+
+
 
 //resources
 const Tea = new Image();
