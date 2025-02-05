@@ -49,7 +49,7 @@ function playSound(audioKey) {
 }
 //levels
 //starting
-let currentLevel = 6;
+let currentLevel = 1;
 let gamePaused = true;
 let levelTextDisplayed = true;
 
