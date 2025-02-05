@@ -17,23 +17,27 @@ const winningScore = 1000;
 //starting resources
 let numberOfResources = 300;
 //enemy wave spawn interval
-let enemiesInterval = 400;
+let enemiesInterval = 500;
 let frame = 0;
 let gameOver = false;
 let score = 0;
 let chosenTower = 1;
-// Start at Level 1
 
 //audio
 const audioFiles = {
-   shoot: new Audio('Shoot.mp3'),
-   swordAttack: new Audio('Swordattack.mp3'),
-   skeletonDeath: new Audio('Skeletondeath.mp3'),
-   teaPickup: new Audio('tea.mp3'),
-   placeTower: new Audio('place.mp3'),
-   slash: new Audio('slash.mp3'),
+    shoot: new Audio('Shoot.mp3'),
+    swordAttack: new Audio('Swordattack.mp3'),
+    skeletonDeath: new Audio('Skeletondeath.mp3'),
+    teaPickup: new Audio('tea.mp3'),
+    placeTower: new Audio('place.mp3'),
+    slash: new Audio('slash.mp3'),
+ };
+ 
+ audioFiles.shoot.volume = 0.7;
+ audioFiles.swordAttack.volume = 0.5;
+ audioFiles.teaPickup.volume = 0.7;
+ audioFiles.slash.volume = 0.7;
 
-};
 for (let key in audioFiles) {
    audioFiles[key].load();
 }
@@ -45,7 +49,7 @@ function playSound(audioKey) {
 }
 //levels
 //starting
-let currentLevel = 1;
+let currentLevel = 6;
 let gamePaused = true;
 let levelTextDisplayed = true;
 
@@ -654,6 +658,7 @@ enemyTypes.push(bossImage);
 const bossCastSound = new Audio('cast.mp3');
 const bossSpawnSound = new Audio('enter.mp3');
 const bossDeathSound = new Audio('death.mp3');
+const bossMusicSound = new Audio('bossmusic.mp3');
 
 class Enemy {
     constructor(verticalPosition, enemyIndex) {
@@ -688,7 +693,7 @@ class Enemy {
             this.size = 'large';
         } else if (enemyIndex === 3) {  
             // yokai
-            this.health = 75; 
+            this.health = 50; 
             this.damage = 2.5;  
             //.7 + .8 for 100 fps 0.98 + 1.12 for 60fps
             this.speed = Math.random() * .98 + 1.12; 
@@ -894,10 +899,18 @@ function handleEnemies() {
     if (currentLevel === 6 && !bossSpawned && score >= (winningScore - 10)) {
         let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap;
         enemies.push(new Enemy(verticalPosition, 4)); 
+        //mute music for boss music
+        backgroundMusic.muted = true; 
+
         bossSpawnSound.currentTime = 0;  
         bossSpawnSound.play();
         bossDeathSound.play();
+        bossMusicSound.play();
         bossSpawned = true;
+
+        bossMusicSound.addEventListener('ended', () => {
+            backgroundMusic.muted = false; // Unmute the background music when the boss music ends
+        });
     }
 
     // Calculate the spawn  based on how far the player is through the level
@@ -969,9 +982,9 @@ function handleEnemies() {
         } else if (currentLevel <= 4) {
             enemiesInterval = Math.max(160, enemiesInterval - 20); // Slightly faster for mid game
         } else if (currentLevel <= 6) {
-            enemiesInterval = Math.max(140, enemiesInterval - 25); // Slightly faster for later game
+            enemiesInterval = Math.max(140, enemiesInterval - 20); // Slightly faster for later game
         } else if (currentLevel > 6) {
-            enemiesInterval = Math.max(120, enemiesInterval - 35); // Even faster as the game progresses
+            enemiesInterval = Math.max(120, enemiesInterval - 25); // Even faster as the game progresses
         }
     }
 }
