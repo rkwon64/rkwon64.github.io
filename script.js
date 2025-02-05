@@ -31,7 +31,7 @@ const audioFiles = {
    skeletonDeath: new Audio('Skeletondeath.mp3'),
    teaPickup: new Audio('tea.mp3'),
    placeTower: new Audio('place.mp3'),
-   slash: new Audio('slash.mp3')
+   slash: new Audio('slash.mp3'),
 
 };
 for (let key in audioFiles) {
@@ -44,7 +44,7 @@ function playSound(audioKey) {
    }
 }
 //levels
-//starting level
+//starting
 let currentLevel = 1;
 let gamePaused = true;
 let levelTextDisplayed = true;
@@ -62,17 +62,17 @@ function showLevelText() {
    if (currentLevel === 1) {
        message = "In this land, Tea was used as a currency and as a sacred offering to spirits\nIt is said that the tea leaves grown there hold mystical properties, keeping balance between living and dead.\nOne fateful night, the vengeful Lord broke the seal between the surface and the underground,\n causing swarms of the dead to rise from their graves\n Captivated by the power of the village's tea, The Lord led the undead army to attack the village\n to steal the tea Leaves and restore themselves to life\n Will you protect the village or will it be lost to the tide of undead? \n\nLevel 1: Click the moon to start!";
    } else if (currentLevel === 2) {
-       message = "Good job! Here's a new troop to use! They don't attack and have weak health, but they produce tea!\nKunoichi unlocked!\nLevel 2: Click the moon to continue.";
+       message = "Good job! Here's a new troop to use! They don't attack and have weak health, but they produce tea!\n Tip: highly reccomended to place kunoichi first\nKunoichi unlocked!\nLevel 2: Click the moon to continue.";
    } else if (currentLevel === 3) {
-       message = "The Lord is not happy, Another even stronger wave inbound! Reinforcements have arrived!\n Samurai are strong and alot of health, but are close range and cost 150 tea. \nSamurai Unlocked!\nLevel 3: Click the moon to start!";
+       message = "The Lord is not happy, Another even stronger wave inbound! Reinforcements have arrived!\n Samurai are strong and alot of health, but are close range and cost 150 tea. \n tip:Samurai are very good at handling groups of enemies \nSamurai Unlocked!\nLevel 3: Click the moon to start!";
    } else if (currentLevel === 4) {
-       message = "The Undead Armies Grow Much Stronger! \nThe Shogun has arrived to help quell the Undead!\nHis powerful Slash attack cleaves through his foes!  \nShogun Unlocked!\nLevel 4: Click the moon to start!";
+       message = "The Undead Armies Grow Much Stronger! \nThe Shogun has arrived to help quell the Undead!\nHis powerful Slash attack cleaves through his foes!\nTip: The Shogun is very strong against many enemies in a single lane \nShogun Unlocked!\nLevel 4: Click the moon to start!";
    } else if (currentLevel === 5) {
-       message = "The Lord is Growing Furious, Beware his new Troop the Yokai! \nSmall and fragile, but Very Swift and Deadly!\n Level 5: Click the moon to start!";""
+       message = "The Lord is Growing Furious, Beware his new Troop the Yokai! \nSmall and fragile, but Very Swift and Deadly!\n Tip: the yokai has very lethal damage so archers are the best way to deal with them\n Level 5: Click the moon to start!";""
    }  else if (currentLevel === 6) {
-    message = "The Lord has Had Enough! He decided to get things done himself!\n Beware his summon necromantic ability to raise the dead!\n Level 6: Click the moon to start!";""
+    message = "The evil lord is approaching!\n Tip: Beware his summon necromantic ability to raise the dead!\n Level 6: Click the moon to start!";""
     } else if (currentLevel === 7) {
-        message = "Thanks for Playing! Continue for endless levels!\n Endless Levels: Click the moon to start!";""
+        message = "You have slain the evil lord! \nThanks for Playing! Continue for endless levels! They will continously get harder.\n Endless Levels: Click the moon to start!";""
     }
    let lines = message.split("\n");
 
@@ -90,6 +90,12 @@ lines.forEach((line, index) => {
         ctx.fillStyle = 'orange';  
     } else if (line.includes("Shogun Unlocked!")) {
         ctx.fillStyle = 'red'; 
+    } else if (line.includes("Level 5: Click the moon to start!")) {
+        ctx.fillStyle = 'yellow'; 
+    } else if (line.includes("Level 6: Click the moon to start!")) {
+        ctx.fillStyle = 'red'; 
+    } else if (line.includes("Endless Levels: Click the moon to start!")) {
+        ctx.fillStyle = 'yellow'; 
     } else {
         ctx.fillStyle = 'white';  
     }
@@ -215,9 +221,9 @@ class Projectile {
        this.y = y;
        this.width = 40;
        this.height = 40;
-       //projectile power and speed
+       //projectile power and speed 15 speed for 100fps 21 for 60fps
        this.power = 25;
-       this.speed = 15;
+       this.speed = 21;
        //arrow sound effect
        playSound('shoot')
    }
@@ -362,8 +368,8 @@ class Tower {
            
    }
    update(){
-       //firerate
-       if (frame % 8 === 0) {
+       //firerate 8 for 100fps 5 for 60fps 20 for 240fps
+       if (frame % 5 === 0) {
            if (this.frameX < this.maxFrame) {
                this.frameX++;
            } else {
@@ -473,6 +479,7 @@ function handleTowers() {
                     if (tower.swordAttackSound) {
                         tower.swordAttackSound.pause();
                         tower.swordAttackSound.currentTime = 0;
+                        enemy.movement = enemy.speed; 
                     }
                 }
                 towers.splice(i, 1);
@@ -513,6 +520,9 @@ function handleMeleeTower(tower) {
     tower.shooting = attacked;
 }
 
+
+
+//tower cards
 const card1 = {
    x: 10,
    y: 10,
@@ -643,14 +653,16 @@ enemyTypes.push(bossImage);
 
 const bossCastSound = new Audio('cast.mp3');
 const bossSpawnSound = new Audio('enter.mp3');
+const bossDeathSound = new Audio('death.mp3');
 
 class Enemy {
     constructor(verticalPosition, enemyIndex) {
-        this.x = canvas.width;
+        this.x = (enemyIndex === 0) ? canvas.width - 100 : canvas.width;
         this.y = verticalPosition;
         this.width = cellSize - cellGap * 2;
         this.height = cellSize - cellGap * 2;
-        this.speed = Math.random() * 0.2 + 0.4; // Default speed
+        //default speeds 0.2 + 0.4 for 100fps 0.3 + 0.56 for 60fps
+        this.speed = Math.random() * 0.3 + 0.56; 
         this.movement = this.speed;
  
         // Assign enemy type (could be the boss image as well)
@@ -669,15 +681,17 @@ class Enemy {
         } else if (enemyIndex === 2) {  
             // Crow 
             this.health = 400;  
-            this.damage = 0.6; 
-            this.speed = Math.random() * 0.1 + 0.3; 
+            this.damage = 0.7; 
+            //0.1 + 0.3 for 100fps 0.2 +0.4 for 60fps
+            this.speed = Math.random() * 0.2 + 0.4; 
             this.movement = this.speed;
             this.size = 'large';
         } else if (enemyIndex === 3) {  
-            // Ring Girl
-            this.health = 50; 
+            // yokai
+            this.health = 75; 
             this.damage = 2.5;  
-            this.speed = Math.random() * .7 + .8; 
+            //.7 + .8 for 100 fps 0.98 + 1.12 for 60fps
+            this.speed = Math.random() * .98 + 1.12; 
             this.movement = this.speed;
         } else if (enemyIndex === 4) {  // Boss
             this.health = 2000;
@@ -706,23 +720,28 @@ class Enemy {
         this.maxFrame = 6;
         this.spriteWidth = 128;
         this.spriteHeight = 128;
+
+        this.isFirstSpawn = true;  // Track if it's the first spawn
+        this.firstSpawnFrames = [7, 8, 9, 10];  // Frames 7-10 for the first spawn
+        this.firstSpawnIndex = 0;  // To track the current frame in first spawn animation
     }
  
-     update() {
+    update() {
+
         if (this.enemyType === bossImage) {
             // Check if the boss has lost 250 health
-            if (this.health <= this.lastHealth - 250) {
+            if (this.health <= this.lastHealth - 150) {
                 // Move the boss to a random vertical lane
                 this.moveToRandomLane();
                 this.lastHealth = this.health; // Update the last health value after the move
             }
-
+    
             if (this.isCasting) {
                 this.movement = 0; // Stop moving while casting
                 this.castTimer++;
         
-                // Play casting animation
-                if (frame % 15 === 0) { 
+                // Play casting animation 15 for 100fps 9 for 60fps
+                if (frame % 9 === 0) { 
                     if (this.frameX < this.maxCastFrame) {
                         this.frameX++;
                     } else {
@@ -737,12 +756,13 @@ class Enemy {
                     this.lastCastTime = frame; // Set cooldown timer
                     this.movement = this.speed; // Resume movement
                 }
+    
             } else {
                 this.movement = this.speed;
                 this.x -= this.movement;
         
-                // Regular walking animation
-                if (frame % 15 === 0) { 
+                // Regular walking animation 15 for 100fps 9 for 60fps
+                if (frame % 9 === 0) { 
                     if (this.frameX < this.maxFrame) {
                         this.frameX++;
                     } else {
@@ -760,20 +780,49 @@ class Enemy {
                     bossCastSound.play();
                 }
             }
-        } else {
-            // Regular enemy behavior
-            this.x -= this.movement;
+        } else if (this.enemyType === enemy1) {  // Sword Skeleton
+            if (this.isFirstSpawn) {
+            
+                // Play frames 7-10 once during the first spawn
+                this.frameX = this.firstSpawnFrames[this.firstSpawnIndex];
+                
+                // Move to the next frame in the first spawn sequence
+                if (frame % 9 === 0) {  // Ensure the animation progresses over time
+                    this.firstSpawnIndex++;
+                    if (this.firstSpawnIndex >= this.firstSpawnFrames.length) {
+                        // After playing frames 7-10, transition to the regular animation
+                        this.isFirstSpawn = false;
+                        this.firstSpawnIndex = 0;  // Reset for future use
+                    }
+                }
+            } else {
+                // Regular walking animation (frames 0-6)
+                this.x -= this.movement;
     
-            // Ensure other enemies animate correctly
-            if (frame % 15 === 0) {
+                if (frame % 9 === 0) {
+                    if (this.frameX < this.maxFrame) {
+                        this.frameX++;
+                    } else {
+                        this.frameX = this.minFrame;
+                    }
+                }
+            }
+            
+        } else {
+            // Regular enemy behavior for other types (such as Spear Skeleton, Crow, etc.)
+            this.x -= this.movement;
+        
+            // Regular walking animation for other enemies
+            if (frame % 9 === 0) {
                 if (this.frameX < this.maxFrame) {
-                    this.frameX++;
+                    this.frameX++;  
                 } else {
                     this.frameX = this.minFrame;
                 }
             }
         }
     }
+    
     moveToRandomLane() {
         // Define vertical lanes
         const lanePositions = [cellSize, 2 * cellSize, 3 * cellSize, 4 * cellSize, 5 * cellSize];
@@ -817,12 +866,18 @@ function handleEnemies() {
         enemies[i].update();
         enemies[i].draw();
 
+        //triger gameover
         if (enemies[i].x < 0) {
             gameOver = true;
         }
         if (enemies[i].health <= 0) {
             playSound('skeletonDeath');
-            let gainedResources = enemies[i].maxHealth / 5;
+            
+            if (enemies[i].enemyType === enemyTypes[2]) {  // Crow is the third type in enemyTypes
+                gainedResources = enemies[i].maxHealth / 20; // Adjusted reward for crows (e.g., divide by 10 instead of 5)
+            } else {
+                gainedResources = enemies[i].maxHealth / 5; // Default reward for other enemies
+            }
             floatingMessages.push(new floatingMessage('+' + gainedResources, enemies[i].x, enemies[i].y, 30, 'white'));
             floatingMessages.push(new floatingMessage('+' + gainedResources, 500, 70, 20, 'gold'));
             numberOfResources += gainedResources;
@@ -841,6 +896,7 @@ function handleEnemies() {
         enemies.push(new Enemy(verticalPosition, 4)); 
         bossSpawnSound.currentTime = 0;  
         bossSpawnSound.play();
+        bossDeathSound.play();
         bossSpawned = true;
     }
 
@@ -884,9 +940,9 @@ function handleEnemies() {
                 } else if (randomValue < 0.6 - earlySpawnFactor * 0.15) {
                     enemyIndex = 1; // Spear Skeleton
                 } else if (randomValue < 0.85 - earlySpawnFactor * 0.1) {
-                    enemyIndex = (levelProgress >= 1 / 3) ? 2 : 0; // Crow starts at 1/3 into the level
+                    enemyIndex = (levelProgress >= 0.6) ? 2 : 0; // Crow starts at 60% into the level
                 } else {
-                    enemyIndex = (levelProgress >= 2 / 3) ? 3 : 0; // Ring Girl starts at 2/3 into the level
+                    enemyIndex = (levelProgress >= .5) ? 3 : 0; // yokai starts at 50% into the level
                 }
 
             }else if (currentLevel === 5) {
@@ -895,9 +951,9 @@ function handleEnemies() {
                 } else if (randomValue < 0.8 - earlySpawnFactor * 0.2) {
                     enemyIndex = 1; // Spear Skeleton
                 } else if (randomValue < 0.95 - earlySpawnFactor * 0.1) {
-                    enemyIndex = (levelProgress >= 0.4) ? 2 : 0; // Crow starts after 40% progress
+                    enemyIndex = (levelProgress >= 0.6) ? 2 : 0; // Crow starts after 60% progress
                 } else {
-                    enemyIndex = (levelProgress >= 0.6) ? 3 : 0; // Ring Girl starts after 65% progress
+                    enemyIndex = (levelProgress >= 0.4) ? 3 : 0; // yokai starts after 40% progress
                 }
             }
             
@@ -909,13 +965,13 @@ function handleEnemies() {
 
         // Adjust spawn interval to increase difficulty more gradually
         if (currentLevel <= 2) {
-            enemiesInterval = Math.max(180, enemiesInterval - 5); // Slow spawn rate for early levels
+            enemiesInterval = Math.max(180, enemiesInterval - 20); // Slow spawn rate for early levels
         } else if (currentLevel <= 4) {
-            enemiesInterval = Math.max(160, enemiesInterval - 8); // Slightly faster for mid game
+            enemiesInterval = Math.max(160, enemiesInterval - 20); // Slightly faster for mid game
         } else if (currentLevel <= 6) {
-            enemiesInterval = Math.max(140, enemiesInterval - 10); // Slightly faster for later game
-        } else {
-            enemiesInterval = Math.max(120, enemiesInterval - 12); // Even faster as the game progresses
+            enemiesInterval = Math.max(140, enemiesInterval - 25); // Slightly faster for later game
+        } else if (currentLevel > 6) {
+            enemiesInterval = Math.max(120, enemiesInterval - 35); // Even faster as the game progresses
         }
     }
 }
@@ -941,7 +997,8 @@ class Resource{
        this.spriteHeight = 128;
    }
    update(){
-       if(frame % 15 === 0){
+    // 15 for 100fps 9 for 60fps
+       if(frame % 9 === 0){
        if (this.frameX < this.maxFrame) this.frameX++;
        else this.frameX = this.minFrame;
    }
